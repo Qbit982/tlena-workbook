@@ -1,8 +1,9 @@
 version: '3.8'
 
 services:
+  # --- PostgreSQL Database Service ---
   postgres:
-    image: postgres:latest
+    image: postgres:15
     container_name: nocodb-postgres-db
     restart: unless-stopped
     environment:
@@ -10,18 +11,17 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "${POSTGRES_HOST_PORT}:5432"
+      - data:/var/lib/postgresql/data
     networks:
       - nocodb-net
 
+  # --- NocoDB Service ---
   nocodb:
     image: nocodb/nocodb:latest
     container_name: nocodb-app
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "${NOCODB_PORT}:8080"
     environment:
       NC_DB: "pg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
@@ -30,7 +30,7 @@ services:
       - nocodb-net
 
 volumes:
-  pgdata:
+  data:
 
 networks:
   nocodb-net:
