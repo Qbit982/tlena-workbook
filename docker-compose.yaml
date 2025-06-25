@@ -19,7 +19,7 @@ services:
     container_name: nocodb-app
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - 80:8080"
     environment:
       NC_DB: "pg://postgres:5432?u=${POSTGRES_USER}&p=${POSTGRES_PASSWORD}&d=${POSTGRES_DB}"
     depends_on:
